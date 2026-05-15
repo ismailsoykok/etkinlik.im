@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #35b8b0; /* Logodaki turkuaz/teal rengi */
+  --color-secondary: #f8c210; /* Logodaki sarı renk */
+  --color-dark: #1f2937;
+  --color-light: #f3f4f6;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+}
+
+body {
+  @apply bg-light text-dark font-sans antialiased;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* ── EventCard Animations ── */
+@keyframes ec-float-kf {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.1); }
+}
+@keyframes ec-pulse-soft-kf {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .7; }
+}
+@keyframes ec-shimmer-kf {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.ec-float {
+  animation: ec-float-kf 3s ease-in-out infinite;
+}
+.ec-pulse-soft {
+  animation: ec-pulse-soft-kf 2.5s ease-in-out infinite;
+}
+.ec-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: ec-shimmer-kf 1.5s infinite linear;
+}
