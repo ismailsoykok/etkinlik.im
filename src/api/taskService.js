@@ -31,6 +31,33 @@ export const taskService = {
   },
 
   /**
+   * Fetch paginated events nearby user's location.
+   */
+  getNearbyTasks: async (latitude, longitude, minDistance = 0, maxDistance = 10) => {
+    const response = await api.get('/tasks/nearby', {
+      params: {
+        latitude,
+        longitude,
+        minDistance,
+        maxDistance,
+      },
+    });
+
+    const raw = response.data;
+
+    if (Array.isArray(raw)) {
+      return { content: raw, totalPages: 1, totalElements: raw.length };
+    }
+
+    if (raw && Array.isArray(raw.content)) {
+      return raw;
+    }
+
+    console.warn('Beklenmeyen API yaniti:', raw);
+    return { content: [], totalPages: 1, totalElements: 0 };
+  },
+
+  /**
    * Search events via Elasticsearch endpoint.
    * @param {string} query - search query string
    */
@@ -59,6 +86,124 @@ export const taskService = {
    */
   getTaskById: async (id) => {
     const response = await api.get(`/tasks/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Fetch currently logged-in user's tasks from /tasks/my
+   */
+  getMyTasks: async () => {
+    const response = await api.get('/tasks/my');
+    return response.data;
+  },
+
+  /**
+   * Fetch tasks shared with/invited to the current user from /tasks/shared
+   */
+  getSharedTasks: async () => {
+    const response = await api.get('/tasks/shared');
+    return response.data;
+  },
+
+  /**
+   * Fetch user permissions for a specific task from /tasks/{id}/my-permissions
+   * @param {string|number} id - task id
+   */
+  getTaskPermissions: async (id) => {
+    const response = await api.get(`/tasks/${id}/my-permissions`);
+    return response.data;
+  },
+
+  /**
+   * Delete an event by its ID.
+   * @param {string|number} id - task id
+   */
+  deleteTask: async (id) => {
+    const response = await api.delete(`/tasks/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Create a new event with optional files.
+   * @param {{title:string, description:string, latitude:number, longitude:number, startDate:string, visibility:string, files:File[]}} payload
+   */
+  createTask: async (payload) => {
+    const formData = new FormData();
+
+    formData.append('title', payload.title);
+    formData.append('description', payload.description);
+    formData.append('latitude', payload.latitude);
+    formData.append('longitude', payload.longitude);
+    formData.append('startDate', payload.startDate);
+    formData.append('visibility', payload.visibility);
+
+    payload.files.forEach(file => {
+      formData.append('files', file);
+    });
+
+    const response = await api.post('http://localhost:8081/tasks', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  /**
+   * Update an existing event with optional files.
+   * @param {string|number} id - task id
+   * @param {{title:string, description:string, latitude:number, longitude:number, startDate:string, visibility:string, files:File[]}} payload
+   */
+  updateTask: async (id, payload) => {
+    const formData = new FormData();
+
+    formData.append('title', payload.title);
+    formData.append('description', payload.description);
+    formData.append('latitude', payload.latitude);
+    formData.append('longitude', payload.longitude);
+    formData.append('startDate', payload.startDate);
+    formData.append('visibility', payload.visibility);
+
+    if (Array.isArray(payload.files)) {
+      payload.files.forEach(file => {
+        if (file instanceof File) {
+          formData.append('files', file);
+        }
+      });
+    }
+
+    const response = await api.put(`/tasks/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  getTaskAllPermissions: async (taskId) => {
+    const response = await api.get(`/tasks/${taskId}/permissions`);
+    return response.data;
+  },
+
+  grantPermission: async (taskId, targetUsername, permission) => {
+    const response = await api.post(`/tasks/${taskId}/permissions/${targetUsername}/${permission}`);
+    return response.data;
+  },
+
+  revokePermission: async (taskId, targetUsername, permission) => {
+    const response = await api.delete(`/tasks/${taskId}/permissions/${targetUsername}/${permission}`);
+    return response.data;
+  },
+
+  grantAllPermissions: async (taskId, targetUsername) => {
+    const response = await api.post(`/tasks/${taskId}/permissions/${targetUsername}/all`);
+    return response.data;
+  },
+
+  revokeAllPermissions: async (taskId, targetUsername) => {
+    const response = await api.delete(`/tasks/${taskId}/permissions/${targetUsername}/all`);
     return response.data;
   },
 };

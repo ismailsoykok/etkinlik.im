@@ -2,16 +2,16 @@ import { useState, useMemo } from 'react';
 
 // --- 10 Gradient Palettes ---
 const PALETTES = [
-  { from: '#0f172a', via: '#1e3a5f', to: '#7c3aed', accent: '#a78bfa' },
-  { from: '#7f1d1d', via: '#dc2626', to: '#f97316', accent: '#fdba74' },
-  { from: '#064e3b', via: '#059669', to: '#34d399', accent: '#6ee7b7' },
-  { from: '#312e81', via: '#4f46e5', to: '#06b6d4', accent: '#67e8f9' },
-  { from: '#831843', via: '#e11d48', to: '#fb923c', accent: '#fda4af' },
-  { from: '#1e1b4b', via: '#7c3aed', to: '#e879f9', accent: '#d8b4fe' },
-  { from: '#134e4a', via: '#0d9488', to: '#a3e635', accent: '#5eead4' },
-  { from: '#78350f', via: '#d97706', to: '#fbbf24', accent: '#fde68a' },
-  { from: '#0c4a6e', via: '#0284c7', to: '#818cf8', accent: '#93c5fd' },
-  { from: '#365314', via: '#65a30d', to: '#4ade80', accent: '#bbf7d0' },
+  { from: '#35b8b0', via: '#009688', to: '#00796b', accent: '#80cbc4' }, // Su Mavisi / Teal (Theme Primary)
+  { from: '#f8c210', via: '#ffb300', to: '#f57c00', accent: '#ffe082' }, // Sarı / Amber (Theme Secondary)
+  { from: '#ff7043', via: '#f4511e', to: '#d84315', accent: '#ffab91' }, // Coral / Sunset Orange
+  { from: '#4f46e5', via: '#3f51b5', to: '#283593', accent: '#9fa8da' }, // Indigo / Royal Blue
+  { from: '#d81b60', via: '#ad1457', to: '#880e4f', accent: '#f48fb1' }, // Rose / Deep Pink
+  { from: '#059669', via: '#00897b', to: '#004d40', accent: '#a5d6a7' }, // Emerald / Forest Green
+  { from: '#0288d1', via: '#0277bd', to: '#01579b', accent: '#81d4fa' }, // Sky / Ocean Blue
+  { from: '#8e24aa', via: '#7b1fa2', to: '#4a148c', accent: '#ce93d8' }, // Purple / Amethyst
+  { from: '#c0ca33', via: '#afb42b', to: '#fbc02d', accent: '#e6ee9c' }, // Lime / Sunburst Gold
+  { from: '#26a69a', via: '#00897b', to: '#00695c', accent: '#b2dfdb' }, // Mint / Soft Turquoise
 ];
 
 // --- Decorative SVG icon paths ---
@@ -53,8 +53,9 @@ function getRelativeLabel(rawDate) {
   return null;
 }
 
-const EventCard = ({ event, onSelect }) => {
+const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
   const [bookmarked, setBookmarked] = useState(false);
+  const isVertical = layout === 'vertical';
 
   const hash = useMemo(() => hashString(event.title || ''), [event.title]);
   const palette = PALETTES[hash % PALETTES.length];
@@ -70,7 +71,7 @@ const EventCard = ({ event, onSelect }) => {
 
   return (
     <div
-      className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-400 transform hover:-translate-y-1 overflow-hidden flex flex-col cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30"
+      className={`group flex ${isVertical ? 'flex-col' : 'flex-col md:flex-row'} bg-white/80 backdrop-blur-md p-6 border border-white/60 rounded-3xl elevation-2 hover:elevation-4 elevation-hover active:scale-[0.985] transition-all duration-300 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 gap-6 w-full items-stretch`}
       role="button"
       tabIndex={0}
       onClick={() => onSelect?.(event.id)}
@@ -81,10 +82,9 @@ const EventCard = ({ event, onSelect }) => {
         }
       }}
     >
-
-      {/* --- Visual Header --- */}
+      {/* --- Visual Header (Left / Top) --- */}
       <div
-        className="h-[160px] relative overflow-hidden"
+        className={`w-full ${isVertical ? '' : 'md:w-56'} h-56 md:h-auto shrink-0 relative overflow-hidden rounded-2xl ${isVertical ? 'h-48 md:h-48' : ''}`}
         style={{ background: `linear-gradient(135deg, ${palette.from}, ${palette.via}, ${palette.to})` }}
       >
         {/* Floating Shapes */}
@@ -120,12 +120,9 @@ const EventCard = ({ event, onSelect }) => {
           }}
         />
 
-        {/* Bottom Gradient for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
         {/* Relative Label Badge - top left */}
         {label && (
-          <div className={`absolute top-3 left-3 z-20 ${label.bg} text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-lg`}>
+          <div className={`absolute top-4 left-4 z-20 ${label.bg} text-white text-[11px] font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-lg shadow-lg`}>
             {label.text}
           </div>
         )}
@@ -133,58 +130,69 @@ const EventCard = ({ event, onSelect }) => {
         {/* Bookmark - top right */}
         <button
           onClick={(e) => { e.stopPropagation(); setBookmarked(!bookmarked); }}
-          className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+          className={`absolute top-4 right-4 z-20 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 active:scale-90 hover:scale-110 ${
             bookmarked
               ? 'bg-secondary text-white shadow-lg shadow-secondary/30'
               : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/40'
           }`}
         >
-          <svg className="w-4 h-4" fill={bookmarked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-5 h-5" fill={bookmarked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
           </svg>
         </button>
-
-        {/* Date & Time Badges - bottom */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-2">
-          <div className="bg-white/90 backdrop-blur-sm text-gray-800 text-[11px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-sm">
-            <svg className="w-3 h-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            {event.date}
-          </div>
-          <div className="bg-white/90 backdrop-blur-sm text-gray-800 text-[11px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-sm">
-            <svg className="w-3 h-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {event.time}
-          </div>
-        </div>
       </div>
 
-      {/* --- Content --- */}
-      <div className="p-4 flex-grow flex flex-col bg-white">
-        <h3 className="font-bold text-gray-900 text-[15px] mb-1 line-clamp-1 group-hover:text-primary transition-colors duration-300">
-          {event.title}
-        </h3>
-        <p className="text-xs text-gray-400 mb-4 line-clamp-1 flex-grow leading-relaxed">
-          {event.desc || <span className="italic text-gray-300">Açıklama yok</span>}
-        </p>
+      {/* --- Content (Right / Bottom) --- */}
+      <div className="flex-grow flex flex-col justify-between min-w-0 md:py-1">
+        <div>
+          {/* Title */}
+          <h3 className="mb-3 text-2xl font-black tracking-tight text-gray-900 line-clamp-1 group-hover:text-primary group-hover:translate-x-1.5 transition-all duration-300 ease-out">
+            {event.title}
+          </h3>
+          
+          {/* Description */}
+          <p className="mb-5 text-sm text-gray-500 line-clamp-2 leading-relaxed">
+            {event.desc || <span className="italic text-gray-300">Açıklama belirtilmemiş</span>}
+          </p>
 
-        <div className="flex items-center justify-between text-[11px] text-gray-400">
+          {/* Date & Time Badges */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <div className="bg-gray-100/60 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 border border-gray-200 transition-colors group-hover:border-primary/20">
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {event.date}
+            </div>
+            <div className="bg-gray-100/60 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 border border-gray-200 transition-colors group-hover:border-primary/20">
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+              </svg>
+              {event.time}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar: Location & Action Button */}
+        <div className="flex items-center justify-between gap-4 pt-4 border-t border-gray-100 mt-auto">
           {/* Location */}
-          <div className="flex items-center gap-1 min-w-0">
-            <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <svg className="w-4 h-4 text-primary shrink-0 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
             </svg>
-            <span className="truncate">{event.address}, {event.city}</span>
+            <span className="text-xs text-gray-400 truncate">{event.address}, {event.city}</span>
           </div>
-          {/* View count */}
-          <div className="flex items-center gap-1 shrink-0 ml-2">
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            <span>{event.fileCount}</span>
+
+          {/* Action Button */}
+          <div className="shrink-0">
+            <button
+              type="button"
+              className="inline-flex items-center w-auto bg-gray-100/80 text-gray-700 font-bold border border-gray-200 group-hover:bg-primary group-hover:text-white group-hover:border-primary group-hover:shadow-md group-hover:shadow-primary/20 active:scale-95 transition-all duration-300 text-xs px-4 py-2.5 rounded-xl focus:outline-none"
+            >
+              Detaylar
+              <svg className="w-4 h-4 ms-1 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5m14 0-4 4m4-4-4-4" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
