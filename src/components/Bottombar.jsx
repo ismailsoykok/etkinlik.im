@@ -6,7 +6,7 @@ const Bottombar = () => {
           
           <div className="flex items-center gap-1 text-xl font-bold">
             <span className="text-primary">etkinlik</span>
-            <span className="text-secondary">.im</span>
+            <span className="text-secondary">.in</span>
           </div>
           
           <div className="flex flex-wrap justify-center space-x-6 text-sm text-gray-500 font-medium">
@@ -17,7 +17,7 @@ const Bottombar = () => {
           </div>
           
           <p className="text-xs text-gray-400 font-medium">
-            &copy; {new Date().getFullYear()} etkinlik.im. Tüm hakları saklıdır.
+            &copy; {new Date().getFullYear()} etkinlik.in. Tüm hakları saklıdır.
           </p>
 
         </div>

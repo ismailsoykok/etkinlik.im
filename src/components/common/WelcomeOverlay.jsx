@@ -82,7 +82,7 @@ export default function WelcomeOverlay() {
             className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-[#10b981] via-[#35b8b0] to-[#06b6d4] select-none drop-shadow-[0_2px_15px_rgba(53,184,176,0.15)] whitespace-nowrap"
             style={{ fontFamily: "'Goldman', system-ui, sans-serif" }}
           >
-            etkinlik.im
+            etkinlik.in
           </h1>
           
           <div className="w-24 h-1.5 bg-gradient-to-r from-[#10b981] to-[#35b8b0] mx-auto rounded-full" />
