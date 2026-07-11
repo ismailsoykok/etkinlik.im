@@ -125,7 +125,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
             </svg>
             <span className="text-2xl font-extrabold tracking-tight transition-all duration-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 whitespace-nowrap overflow-hidden">
               <span className="text-primary">etkinlik</span>
-              <span className="text-secondary">.im</span>
+              <span className="text-secondary">.in</span>
             </span>
           </div>
 
