@@ -11,11 +11,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'api.etkinlik.in',
+        target: 'https://api.etkinlik.in',
         changeOrigin: true,
       },
       '/tasks': {
-        target: 'api.etkinlik.in',
+        target: 'https://api.etkinlik.in',
         changeOrigin: true,
       },
     }

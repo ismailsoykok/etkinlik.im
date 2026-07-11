@@ -141,7 +141,7 @@ export const taskService = {
       formData.append('files', file);
     });
 
-    const response = await api.post('http://localhost:8081/tasks', formData, {
+    const response = await api.post('/tasks', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
