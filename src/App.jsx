@@ -78,7 +78,6 @@ function App() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [user, setUser] = useState(authService.getCurrentUser());
-  const [mapFilter, setMapFilter] = useState('all');
   const currentView = pathname === '/events/new'
     ? 'add'
     : pathname.startsWith('/events/')
@@ -115,9 +114,7 @@ function App() {
   // --- Geolocation state ---
   const [userLocation, setUserLocation] = useState(null);
   const [locatingUser, setLocatingUser] = useState(false);
-  const [minDistance, setMinDistance] = useState(0);
-  const [maxDistance, setMaxDistance] = useState(10);
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [mapView, setMapView] = useState({ lat: 41.0082, lng: 28.9784, radius: 10 });
 
   const handleGetCoords = () => {
     setLocatingUser(true);
@@ -164,13 +161,11 @@ function App() {
     }
   };
 
-  const fetchEvents = useCallback(async (pageNum) => {
+  const fetchEvents = useCallback(async (lat, lng, radius) => {
     setLoading(true);
     setError(null);
     try {
-      const lat = userLocation?.lat || 41.0082; // Varsayılan İstanbul
-      const lng = userLocation?.lng || 28.9784;
-      const data = await taskService.getNearbyTasks(lat, lng, minDistance, maxDistance);
+      const data = await taskService.getNearbyTasks(lat, lng, 0, radius);
       setEvents(data.content.map(parseTask));
       setTotalPages(data.totalPages ?? 1);
     } catch (err) {
@@ -179,14 +174,14 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, [userLocation, minDistance, maxDistance]);
+  }, []);
 
   useEffect(() => {
     if (currentView === 'home' && !isSearching) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchEvents(page);
+      setPage(0);
+      fetchEvents(mapView.lat, mapView.lng, mapView.radius);
     }
-  }, [currentView, page, fetchEvents, isSearching]);
+  }, [currentView, mapView, fetchEvents, isSearching]);
 
   // --- Debounced search ---
   const handleSearchChange = (e) => {
@@ -242,13 +237,6 @@ function App() {
     navigate(paths[view] ?? '/');
   };
 
-  const filterPills = [
-    { id: 'all', label: 'Tümü', color: 'bg-primary' },
-    { id: 'today', label: 'Bugün', color: 'bg-red-500' },
-    { id: 'week', label: 'Bu Hafta', color: 'bg-amber-500' },
-    { id: 'month', label: 'Bu Ay', color: 'bg-blue-500' },
-  ];
-
   const homeLayout = (
     <div className={`flex flex-col lg:flex-row gap-6 items-start w-full transition-all duration-500 ${
       ['login', 'register'].includes(currentView) ? 'blur-lg pointer-events-none select-none' : ''
@@ -257,23 +245,7 @@ function App() {
       {/* Left: Map */}
       <div className="w-full lg:w-[44%] flex flex-col gap-3 shrink-0">
         <div className="h-[450px] lg:h-[calc(100vh-10rem)] lg:sticky lg:top-[5.5rem] rounded-3xl overflow-hidden bg-white/80 backdrop-blur-md border border-white/60 elevation-2">
-          <EventMap events={displayedEvents} onEventSelect={openEventDetail} userLocation={userLocation} />
-        </div>
-        {/* Map Filter Pills */}
-        <div className="flex items-center justify-center gap-2 py-2">
-          {filterPills.map(pill => (
-            <button
-              key={pill.id}
-              onClick={() => setMapFilter(pill.id)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 active:scale-95 ${mapFilter === pill.id
-                  ? 'bg-white/90 backdrop-blur-md shadow-md text-gray-800 border border-white/65'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-white/30'
-                }`}
-            >
-              <span className={`w-2 h-2 rounded-full ${pill.color}`} />
-              {pill.label}
-            </button>
-          ))}
+          <EventMap events={displayedEvents} onEventSelect={openEventDetail} userLocation={userLocation} onMapMove={setMapView} />
         </div>
       </div>
 
@@ -294,79 +266,7 @@ function App() {
               {isLoading ? 'Aranıyor…' : `${displayedEvents.length} etkinlik listeleniyor`}
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Filtrele Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setFilterOpen(o => !o)}
-                className={`group/fil flex items-center gap-1.5 backdrop-blur-md border text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-300 shadow-sm ${
-                  filterOpen
-                    ? 'bg-primary text-white border-primary shadow-primary/25'
-                    : 'bg-white/80 border-white/60 text-gray-600 hover:bg-white/95'
-                }`}
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                Filtrele
-                {(minDistance > 0 || maxDistance !== 10) && (
-                  <span className="ml-1 w-2 h-2 rounded-full bg-red-400 inline-block" />
-                )}
-              </button>
 
-              {/* Dropdown Panel */}
-              {filterOpen && (
-                <div className="absolute right-0 top-full mt-2 z-50 w-56 bg-white/95 backdrop-blur-xl border border-white/60 rounded-2xl shadow-2xl p-4 flex flex-col gap-3">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Mesafe Filtresi</p>
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Min (km)</label>
-                      <input
-                        type="number"
-                        value={minDistance}
-                        onFocus={(e) => { if (Number(e.target.value) === 0) e.target.value = ''; }}
-                        onChange={(e) => {
-                          const val = e.target.value === '' ? 0 : Number(e.target.value);
-                          setMinDistance(val);
-                          setPage(0);
-                        }}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-primary text-center text-sm font-semibold bg-gray-50"
-                        min="0"
-                        placeholder="0"
-                      />
-                    </div>
-                    <span className="text-gray-300 font-bold text-lg mt-4">—</span>
-                    <div className="flex-1 flex flex-col gap-1">
-                      <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Max (km)</label>
-                      <input
-                        type="number"
-                        value={maxDistance}
-                        onFocus={(e) => { e.target.select(); }}
-                        onChange={(e) => {
-                          const val = e.target.value === '' ? 0 : Number(e.target.value);
-                          setMaxDistance(val);
-                          setPage(0);
-                        }}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-primary text-center text-sm font-semibold bg-gray-50"
-                        min="0"
-                        placeholder="10"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setMinDistance(0);
-                      setMaxDistance(10);
-                      setPage(0);
-                    }}
-                    className="text-xs text-gray-400 hover:text-primary font-semibold transition-colors text-center"
-                  >
-                    Sıfırla
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Error */}

@@ -73,7 +73,30 @@ function CenterMap({ coords }) {
   return null;
 }
 
-const EventMap = ({ events = [], onEventSelect, userLocation }) => {
+function MapCenterTracker({ onMove }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!onMove) return;
+    const handleDragEnd = () => {
+      const center = map.getCenter();
+      const bounds = map.getBounds();
+      const ne = bounds.getNorthEast();
+      const visibleRadius = center.distanceTo(ne) / 1000;
+      onMove({
+        lat: Number(center.lat.toFixed(6)),
+        lng: Number(center.lng.toFixed(6)),
+        radius: Math.max(1, Math.round(visibleRadius * 1.5)),
+      });
+    };
+    map.on('dragend', handleDragEnd);
+    return () => map.off('dragend', handleDragEnd);
+  }, [map, onMove]);
+
+  return null;
+}
+
+const EventMap = ({ events = [], onEventSelect, userLocation, onMapMove }) => {
   const defaultCenter = [41.0082, 28.9784]; // İstanbul fallback
 
   // Geçerli koordinatlara sahip etkinlikleri filtrele
@@ -136,8 +159,8 @@ const EventMap = ({ events = [], onEventSelect, userLocation }) => {
           />
         )}
 
-        {/* Otomatik sınır ayarı (Kullanıcı konumu aktifken harita sınırlandırmasını devre dışı bırakıyoruz) */}
-        {!userLocation && groupedMarkers.length > 0 && <FitBounds markers={groupedMarkers} />}
+        {/* Merkez takipçisi - harita kaydırılınca bildirir */}
+        <MapCenterTracker onMove={onMapMove} />
 
         {/* API'den gelen etkinlik işaretçileri */}
         {groupedMarkers.map(event => (
@@ -190,6 +213,16 @@ const EventMap = ({ events = [], onEventSelect, userLocation }) => {
         ))}
 
       </MapContainer>
+
+      {/* + crosshair - merkez işareti */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-[1000]">
+        <div className="relative w-8 h-8">
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-0.5 h-full bg-white/70 rounded-full" />
+          <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-0.5 bg-white/70 rounded-full" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-white" />
+        </div>
+      </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
         /* Marker Animations */
