@@ -376,7 +376,7 @@ const AddEventPage = () => {
               {isEdit ? 'Etkinliği Düzenle' : 'Etkinlik Ekle'}
             </h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             <button
               type="button"
               onClick={() => navigate(-1)}
@@ -402,6 +402,34 @@ const AddEventPage = () => {
               {submitState.loading ? 'Kaydediliyor...' : isEdit ? 'Değişiklikleri Kaydet' : 'Etkinliği Kaydet'}
             </button>
           </div>
+        </div>
+
+        {/* Mobil için sticky butonlar */}
+        <div className="sticky top-3 z-20 sm:hidden flex items-center gap-3 bg-white/95 backdrop-blur-xl border border-white/60 rounded-2xl px-4 py-3 shadow-lg">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex-1 group/cancel inline-flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-3.5 text-sm font-black text-gray-700 shadow-sm hover:bg-gray-50 hover:text-primary hover:border-gray-300 active:scale-95 transition-all duration-300"
+          >
+            <svg className="w-4 h-4 transition-transform duration-300 group-hover/cancel:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            İptal
+          </button>
+          <button
+            type="submit"
+            disabled={submitState.loading}
+            className="flex-1 group/save inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3.5 text-sm font-black text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <svg className="w-4 h-4 transition-transform duration-500 group-hover/save:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              {isEdit ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              )}
+            </svg>
+            {submitState.loading ? 'Kaydediliyor...' : isEdit ? 'Kaydet' : 'Kaydet'}
+          </button>
         </div>
 
         {submitState.success && (
