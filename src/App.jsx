@@ -549,7 +549,7 @@ function App() {
         )}
 
         {/* Content Area */}
-        <div className="flex-grow p-6 max-w-[1800px] mx-auto w-full relative">
+        <div className="flex-grow px-4 sm:px-6 py-6 max-w-[1800px] mx-auto w-full relative">
 
           <Routes>
             <Route path="/events/new" element={<AddEventPage />} />

@@ -128,7 +128,7 @@ const EventDetail = ({ event, loading, error, onBack }) => {
   const heroImage = event.files.find((file) => file.url && isImageFile(file));
 
   return (
-    <div className="space-y-8 pb-12 max-w-[1500px] mx-auto px-4">
+    <div className="space-y-8 pb-12 max-w-[1500px] mx-auto">
       <style>{`
         @keyframes fadeInUp {
           from {

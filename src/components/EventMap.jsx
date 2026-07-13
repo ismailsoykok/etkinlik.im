@@ -189,16 +189,6 @@ const EventMap = ({ events = [], onEventSelect, userLocation }) => {
           </Marker>
         ))}
 
-        {/* Koordinatı olmayan ama harita açıkken gösterilen fallback */}
-        {groupedMarkers.length === 0 && (
-          <Marker position={defaultCenter} icon={getCustomIcon(1)}>
-            <Popup className="premium-popup">
-              <div className="px-4 py-3 bg-white rounded-xl shadow-lg text-center">
-                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Etkinlik Bulunmadı</p>
-              </div>
-            </Popup>
-          </Marker>
-        )}
       </MapContainer>
 
       <style dangerouslySetInnerHTML={{ __html: `

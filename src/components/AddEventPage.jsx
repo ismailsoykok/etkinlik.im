@@ -363,7 +363,7 @@ const AddEventPage = () => {
   };
 
   return (
-    <section className="w-full max-w-[1500px] mx-auto pb-12 px-4">
+    <section className="w-full max-w-[1500px] mx-auto pb-12">
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
         
         {/* Page Header */}
@@ -686,6 +686,7 @@ const AddEventPage = () => {
                 style={{
                   height: '100%',
                   width: '100%',
+                  cursor: 'crosshair',
                   filter: 'hue-rotate(-10deg) saturate(1.25) contrast(1.05) brightness(1.04)',
                 }}
               >
