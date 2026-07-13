@@ -183,6 +183,12 @@ function App() {
     }
   }, [currentView, mapView, fetchEvents, isSearching]);
 
+  useEffect(() => {
+    if (userLocation) {
+      setMapView({ lat: userLocation.lat, lng: userLocation.lng, radius: mapView.radius });
+    }
+  }, [userLocation]);
+
   // --- Debounced search ---
   const handleSearchChange = (e) => {
     const value = e.target.value;
