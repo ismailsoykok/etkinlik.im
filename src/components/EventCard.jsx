@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 
 // --- 10 Gradient Palettes ---
 const PALETTES = [
@@ -54,7 +54,6 @@ function getRelativeLabel(rawDate) {
 }
 
 const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
-  const [bookmarked, setBookmarked] = useState(false);
   const isVertical = layout === 'vertical';
 
   const hash = useMemo(() => hashString(event.title || ''), [event.title]);
@@ -127,19 +126,7 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
           </div>
         )}
 
-        {/* Bookmark - top right */}
-        <button
-          onClick={(e) => { e.stopPropagation(); setBookmarked(!bookmarked); }}
-          className={`absolute top-4 right-4 z-20 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 active:scale-90 hover:scale-110 ${
-            bookmarked
-              ? 'bg-secondary text-white shadow-lg shadow-secondary/30'
-              : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/40'
-          }`}
-        >
-          <svg className="w-5 h-5" fill={bookmarked ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-          </svg>
-        </button>
+
       </div>
 
       {/* --- Content (Right / Bottom) --- */}

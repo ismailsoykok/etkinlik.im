@@ -10,10 +10,10 @@ const Bottombar = () => {
           </div>
           
           <div className="flex flex-wrap justify-center space-x-6 text-sm text-gray-500 font-medium">
-            <a href="#" className="hover:text-primary transition-colors">Hakkımızda</a>
-            <a href="#" className="hover:text-primary transition-colors">İletişim</a>
-            <a href="#" className="hover:text-primary transition-colors">Gizlilik Politikası</a>
-            <a href="#" className="hover:text-primary transition-colors">Kullanım Koşulları</a>
+            <a href="/hakkimizda" className="hover:text-primary transition-colors">Hakkımızda</a>
+            <a href="/iletisim" className="hover:text-primary transition-colors">İletişim</a>
+            <a href="/gizlilik-politikasi" className="hover:text-primary transition-colors">Gizlilik Politikası</a>
+            <a href="/kullanim-kosullari" className="hover:text-primary transition-colors">Kullanım Koşulları</a>
           </div>
           
           <p className="text-xs text-gray-400 font-medium">

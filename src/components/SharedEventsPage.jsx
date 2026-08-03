@@ -416,7 +416,7 @@ const SharedEventsPage = () => {
                   </div>
                   <button
                     disabled={!permissions.includes('ADD_FILE')}
-                    onClick={() => toast.info('Dosya ekleme özelliği yakında aktif edilecektir.')}
+                    onClick={() => toast.info('Dosya eklemek için etkinlik detay sayfasını ziyaret edin.')}
                     className={`w-24 py-1.5 text-xs font-bold rounded-xl shrink-0 transition-all text-center ${
                       permissions.includes('ADD_FILE')
                         ? 'bg-emerald-500 hover:bg-emerald-600 text-white active:scale-95 shadow-sm'

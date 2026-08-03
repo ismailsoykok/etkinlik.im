@@ -12,6 +12,11 @@ import MyEventsPage from './components/MyEventsPage';
 import UpcomingEventsPage from './components/UpcomingEventsPage';
 import SharedEventsPage from './components/SharedEventsPage';
 import ShareEventPage from './components/ShareEventPage';
+import ProfilePage from './components/ProfilePage';
+import AboutPage from './components/AboutPage';
+import ContactPage from './components/ContactPage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import TermsPage from './components/TermsPage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -94,7 +99,17 @@ function App() {
                 ? 'shared-events'
                 : pathname === '/share-events'
                   ? 'share-events'
-                  : 'home';
+                  : pathname === '/profile'
+                    ? 'profile'
+                    : pathname === '/contact' || pathname === '/iletisim'
+                      ? 'contact'
+                      : pathname === '/privacy' || pathname === '/gizlilik-politikasi'
+                        ? 'privacy'
+                        : pathname === '/terms' || pathname === '/kullanim-kosullari'
+                          ? 'terms'
+                          : pathname === '/about' || pathname === '/hakkimizda'
+                            ? 'about'
+                            : 'home';
 
   // --- Event state ---
   const [events, setEvents] = useState([]);
@@ -239,6 +254,8 @@ function App() {
       upcoming: '/upcoming',
       'shared-events': '/shared-events',
       'share-events': '/share-events',
+      profile: '/profile',
+      contact: '/contact',
     };
     navigate(paths[view] ?? '/');
   };
@@ -365,7 +382,7 @@ function App() {
 
   return (
     <div className="flex min-h-screen bg-light font-sans">
-      {/* {currentView === 'home' && <WelcomeOverlay />} */}
+
 
       {/* Sidebar */}
       <Sidebar
@@ -414,20 +431,7 @@ function App() {
                   className="w-full bg-transparent text-base text-gray-700 placeholder-gray-400 focus:outline-none"
                 />
               </div>
-              {/* Nav Links */}
-              <div className="hidden md:flex items-center gap-1.5">
-                <button className="px-4 py-2 text-base font-bold text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100/80 active:scale-95 hover:scale-105 transition-all duration-300">
-                  Keşfet
-                </button>
-                <button className="px-4 py-2 text-base font-bold text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100/80 active:scale-95 hover:scale-105 transition-all duration-300">
-                  Harita
-                </button>
-                <button className="px-4 py-2 text-base font-bold text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100/80 active:scale-95 hover:scale-105 transition-all duration-300">
-                  Takvim
-                </button>
-              </div>
-              {/* Divider */}
-              <div className="hidden md:block w-px h-6 bg-gray-200"></div>
+
               {/* Location Button */}
               <button
                 onClick={handleGetCoords}
@@ -468,6 +472,15 @@ function App() {
             <Route path="/upcoming" element={<UpcomingEventsPage />} />
             <Route path="/shared-events" element={<SharedEventsPage />} />
             <Route path="/share-events" element={<ShareEventPage />} />
+            <Route path="/profile" element={<ProfilePage user={user} />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/iletisim" element={<ContactPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/gizlilik-politikasi" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/kullanim-kosullari" element={<TermsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/hakkimizda" element={<AboutPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
 

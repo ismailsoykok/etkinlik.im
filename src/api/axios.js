@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.PROD ? 'https://api.etkinlik.in' : '',
+  baseURL: '',
   headers: {
     'Content-Type': 'application/json',
   },

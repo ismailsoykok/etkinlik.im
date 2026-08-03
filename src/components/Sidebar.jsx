@@ -20,6 +20,15 @@ const navItems = [
     ),
   },
   {
+    id: 'profile',
+    label: 'Profilim',
+    icon: (
+      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0" />
+      </svg>
+    ),
+  },
+  {
     id: 'shared-events',
     label: 'Davet Edildiklerim',
     icon: (
@@ -48,24 +57,6 @@ const navItems = [
     ),
   },
   {
-    id: 'categories',
-    label: 'Kategoriler',
-    icon: (
-      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'favorites',
-    label: 'Favorilerim',
-    icon: (
-      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-      </svg>
-    ),
-  },
-  {
     id: 'add',
     label: 'Etkinlik Ekle',
     icon: (
@@ -80,7 +71,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleNav = (id) => {
-    onNavigate(id === 'categories' || id === 'favorites' ? 'home' : id);
+    onNavigate(id);
     setMobileOpen(false);
   };
 
@@ -136,7 +127,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
           {/* Navigation */}
           <nav className="flex-1 px-3.5 py-5 space-y-2.5 overflow-y-auto overflow-x-hidden">
             {navItems.map(item => {
-              if ((item.id === 'my-events' || item.id === 'shared-events' || item.id === 'share-events') && !user) return null;
+              if ((item.id === 'my-events' || item.id === 'profile' || item.id === 'shared-events' || item.id === 'share-events') && !user) return null;
               const isActive = item.id === currentView || (item.id === 'home' && (currentView === 'home' || currentView === 'detail'));
               return (
                 <button
@@ -161,7 +152,13 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
           <div className="p-4 border-t border-gray-100 overflow-hidden shrink-0">
             {user ? (
               <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3 px-2">
+                <button
+                  type="button"
+                  onClick={() => { onNavigate('profile'); setMobileOpen(false); }}
+                  className={`flex items-center gap-3 px-2 py-2 rounded-xl text-left transition-all duration-300 hover:bg-gray-50 active:scale-[0.98] ${
+                    currentView === 'profile' ? 'bg-primary/10' : ''
+                  }`}
+                >
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm shadow-primary/10">
                     {user.charAt(0).toUpperCase()}
                   </div>
@@ -169,7 +166,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
                     <p className="text-xs text-gray-400 font-medium">Hoş geldin,</p>
                     <p className="font-bold text-primary text-sm truncate">{user}</p>
                   </div>
-                </div>
+                </button>
                 <button
                   onClick={() => { onLogout(); setMobileOpen(false); }}
                   className="group/logout w-full flex items-center justify-center lg:justify-start gap-3.5 text-red-500 font-bold text-base px-4 lg:px-[17px] lg:group-hover:px-4 py-3.5 rounded-xl border-2 border-red-100 hover:bg-red-50 hover:border-red-200 hover:scale-[1.01] active:scale-[0.96] transition-all duration-300"
