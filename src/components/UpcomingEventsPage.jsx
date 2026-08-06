@@ -80,11 +80,20 @@ const UpcomingEventsPage = () => {
               <EventCard key={event.id} event={event} onSelect={openEventDetail} layout="vertical" />
             ))
           ) : (
-            <div className="col-span-full text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-white/60">
+            <div className="col-span-full flex flex-col items-center justify-center text-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-white/60">
               <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-gray-500 font-semibold text-xl">Yaklaşan etkinlik bulunmuyor.</p>
+              <p className="text-gray-500 font-semibold text-xl mb-4">Yaklaşan etkinlik bulunmuyor.</p>
+              <button 
+                onClick={() => navigate('/events/new')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 active:scale-95"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Yeni Etkinlik Oluştur
+              </button>
             </div>
           )}
         </div>

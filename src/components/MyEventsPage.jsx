@@ -129,15 +129,15 @@ const MyEventsPage = () => {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="bg-white/80 backdrop-blur-md border border-white/60 rounded-2xl p-5 shadow-sm hover:scale-[1.02] hover:border-primary/20 hover:shadow-md transition-all duration-300">
-          <p className="text-3xl font-extrabold text-primary">{loading ? '...' : totalCount}</p>
+          {loading ? <div className="w-12 h-9 ec-shimmer rounded-xl mb-1" /> : <p className="text-3xl font-extrabold text-primary">{totalCount}</p>}
           <p className="text-sm text-gray-500 font-medium mt-1">Toplam Etkinlik</p>
         </div>
         <div className="bg-white/80 backdrop-blur-md border border-white/60 rounded-2xl p-5 shadow-sm hover:scale-[1.02] hover:border-green-500/20 hover:shadow-md transition-all duration-300">
-          <p className="text-3xl font-extrabold text-green-500">{loading ? '...' : activeCount}</p>
+          {loading ? <div className="w-12 h-9 ec-shimmer rounded-xl mb-1" /> : <p className="text-3xl font-extrabold text-green-500">{activeCount}</p>}
           <p className="text-sm text-gray-500 font-medium mt-1">Aktif Etkinlik</p>
         </div>
         <div className="bg-white/80 backdrop-blur-md border border-white/60 rounded-2xl p-5 shadow-sm hover:scale-[1.02] hover:border-amber-500/20 hover:shadow-md transition-all duration-300">
-          <p className="text-3xl font-extrabold text-amber-500">{loading ? '...' : upcomingCount}</p>
+          {loading ? <div className="w-12 h-9 ec-shimmer rounded-xl mb-1" /> : <p className="text-3xl font-extrabold text-amber-500">{upcomingCount}</p>}
           <p className="text-sm text-gray-500 font-medium mt-1">Yaklaşan Etkinlik</p>
         </div>
       </div>

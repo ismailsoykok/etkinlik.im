@@ -130,6 +130,7 @@ function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [locatingUser, setLocatingUser] = useState(false);
   const [mapView, setMapView] = useState({ lat: 41.0082, lng: 28.9784, radius: 10 });
+  const [mobileView, setMobileView] = useState('list'); // 'map' or 'list'
 
   const handleGetCoords = () => {
     setLocatingUser(true);
@@ -265,15 +266,35 @@ function App() {
       ['login', 'register'].includes(currentView) ? 'blur-lg pointer-events-none select-none' : ''
     }`}>
 
+      {/* Mobile View Toggle */}
+      <div className="lg:hidden w-full flex bg-gray-200/50 p-1.5 rounded-2xl mb-1 mt-2">
+        <button 
+          onClick={() => setMobileView('list')}
+          className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all ${mobileView === 'list' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          Liste Görünümü
+        </button>
+        <button 
+          onClick={() => {
+            setMobileView('map');
+            // Leaflet map'in display:none'dan flex'e geçerkenki gri kalma (boyut hesaplayamama) hatasını çözmek için:
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+          }}
+          className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all ${mobileView === 'map' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          Harita Görünümü
+        </button>
+      </div>
+
       {/* Left: Map */}
-      <div className="w-full lg:w-[44%] flex flex-col gap-3 shrink-0">
-        <div className="h-[450px] lg:h-[calc(100vh-10rem)] lg:sticky lg:top-[5.5rem] rounded-3xl overflow-hidden bg-white/80 backdrop-blur-md border border-white/60 elevation-2">
+      <div className={`w-full lg:w-[44%] flex-col gap-3 shrink-0 ${mobileView === 'list' ? 'hidden lg:flex' : 'flex'}`}>
+        <div className="h-[calc(100vh-16rem)] min-h-[450px] lg:h-[calc(100vh-10rem)] lg:sticky lg:top-[5.5rem] rounded-3xl overflow-hidden bg-white/80 backdrop-blur-md border border-white/60 elevation-2">
           <EventMap events={displayedEvents} onEventSelect={openEventDetail} userLocation={userLocation} onMapMove={setMapView} />
         </div>
       </div>
 
       {/* Right: Cards */}
-      <div className="w-full lg:w-[55%] lg:h-[calc(100vh-11rem)] lg:sticky lg:top-[4.5rem] lg:overflow-y-auto pr-1 pb-8 ec-scrollbar">
+      <div className={`w-full lg:w-[55%] lg:h-[calc(100vh-11rem)] lg:sticky lg:top-[4.5rem] lg:overflow-y-auto pr-1 pb-8 ec-scrollbar ${mobileView === 'map' ? 'hidden lg:block' : 'block'}`}>
 
         {/* Title & Filters */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
@@ -327,12 +348,21 @@ function App() {
                 <EventCard key={event.id} event={event} onSelect={openEventDetail} />
               ))
             ) : isSearching ? (
-              <div className="col-span-full text-center py-16">
+              <div className="col-span-full flex flex-col items-center text-center py-16">
                 <svg className="w-16 h-16 text-gray-200 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <p className="text-gray-400 font-semibold text-lg">Sonuç bulunamadı</p>
-                <p className="text-gray-300 text-sm mt-1">"{searchQuery}" için eşleşen etkinlik yok</p>
+                <p className="text-gray-300 text-sm mt-1 mb-6">"{searchQuery}" için eşleşen etkinlik yok</p>
+                <button 
+                  onClick={() => navigate('/events/new')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md shadow-primary/20 active:scale-95"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Yeni Etkinlik Oluştur
+                </button>
               </div>
             ) : null}
           </div>
@@ -436,6 +466,7 @@ function App() {
               <button
                 onClick={handleGetCoords}
                 disabled={locatingUser}
+                aria-label="Konumumu Bul"
                 className="group/loc flex items-center gap-1.5 px-4 py-2 text-base font-bold text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-all duration-300 active:scale-95 hover:scale-105 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className={`w-4 h-4 text-primary transition-transform duration-300 group-hover/loc:scale-110 group-hover/loc:rotate-12 ${locatingUser ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -447,6 +478,7 @@ function App() {
               {/* Add Event Button */}
               <button
                 onClick={() => navigate('/events/new')}
+                aria-label="Yeni Etkinlik Ekle"
                 className="group/addbtn flex items-center gap-1.5 px-5 py-2 bg-primary text-white text-base font-extrabold rounded-full hover:bg-primary/90 transition-all duration-300 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-95 hover:scale-105 whitespace-nowrap"
               >
                 <svg className="w-4 h-4 transition-transform duration-500 group-hover/addbtn:scale-110 group-hover/addbtn:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
