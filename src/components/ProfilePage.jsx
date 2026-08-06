@@ -125,24 +125,48 @@ const ProfilePage = () => {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (window.confirm('Hesabınızı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
-      try {
-        setDeleting(true);
-        await userService.deleteAccount();
-        authService.logout();
-        toast.success('Hesabınız kalıcı olarak silindi.');
-        navigate('/login');
-      } catch (error) {
-        console.error('Hesap silme hatası:', error);
-        toast.error('Hesabınız silinirken bir hata oluştu.');
-        setDeleting(false);
+  const handleDeleteAccount = () => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-3">
+          <p className="font-bold text-sm text-gray-800">Hesabınızı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</p>
+          <div className="flex justify-end gap-2">
+            <button 
+              className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-300 transition-colors"
+              onClick={closeToast}
+            >
+              İptal
+            </button>
+            <button 
+              className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-600 transition-colors"
+              onClick={async () => {
+                closeToast();
+                try {
+                  setDeleting(true);
+                  await userService.deleteAccount();
+                  authService.logout();
+                  toast.success('Hesabınız kalıcı olarak silindi.');
+                  navigate('/login');
+                } catch (error) {
+                  console.error('Hesap silme hatası:', error);
+                  toast.error('Hesabınız silinirken bir hata oluştu.');
+                  setDeleting(false);
+                }
+              }}
+            >
+              Evet, Sil
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
       }
-    }
-  };
-
-  const handleExportData = () => {
-    toast.info('Veri dışa aktarma işlemi çok yakında eklenecektir.');
+    );
   };
 
   // Safe defaults while loading
@@ -387,30 +411,14 @@ const ProfilePage = () => {
               </div>
 
               {/* Danger Zone */}
-              <div className="bg-red-50/50 backdrop-blur-md border border-red-100 rounded-[2.5rem] p-8 shadow-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <h2 className="text-xl font-black text-red-600">Tehlikeli Bölge</h2>
-                </div>
-                <p className="text-red-900/70 font-medium text-sm mb-6">Buradaki işlemler geri alınamaz. Lütfen dikkatli olun.</p>
-                
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button 
-                    onClick={handleExportData} 
-                    className="flex-1 px-6 py-4 bg-white border-2 border-gray-200 text-gray-700 font-bold rounded-2xl hover:border-gray-300 hover:bg-gray-50 active:scale-95 transition-all text-center"
-                  >
-                    Verilerimi İndir
-                  </button>
-                  <button 
-                    onClick={handleDeleteAccount} 
-                    disabled={deleting}
-                    className="flex-1 px-6 py-4 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 active:scale-95 transition-all shadow-md shadow-red-500/20 text-center disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {deleting ? 'Siliniyor...' : 'Hesabımı Kalıcı Olarak Sil'}
-                  </button>
-                </div>
+              <div className="mt-12 flex flex-col items-center justify-center pt-8 border-t border-gray-100/50">
+                <button 
+                  onClick={handleDeleteAccount} 
+                  disabled={deleting}
+                  className="text-xs font-medium text-gray-400 hover:text-red-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {deleting ? 'İşlem yapılıyor...' : 'Hesabımı kalıcı olarak silmek istiyorum'}
+                </button>
               </div>
 
             </div>
