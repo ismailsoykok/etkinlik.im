@@ -17,6 +17,7 @@ import AboutPage from './components/AboutPage';
 import ContactPage from './components/ContactPage';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import TermsPage from './components/TermsPage';
+import FavoritesPage from './components/FavoritesPage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -87,8 +88,10 @@ function App() {
     ? 'add'
     : pathname.startsWith('/events/')
       ? 'detail'
-      : pathname === '/login'
-        ? 'login'
+      : pathname === '/favorites'
+        ? 'favorites'
+        : pathname === '/login'
+          ? 'login'
         : pathname === '/register'
           ? 'register'
           : pathname === '/my-events'
@@ -255,6 +258,7 @@ function App() {
       upcoming: '/upcoming',
       'shared-events': '/shared-events',
       'share-events': '/share-events',
+      favorites: '/favorites',
       profile: '/profile',
       contact: '/contact',
     };
@@ -504,6 +508,7 @@ function App() {
             <Route path="/upcoming" element={<UpcomingEventsPage />} />
             <Route path="/shared-events" element={<SharedEventsPage />} />
             <Route path="/share-events" element={<ShareEventPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/profile" element={<ProfilePage user={user} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/iletisim" element={<ContactPage />} />

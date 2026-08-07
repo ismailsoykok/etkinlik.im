@@ -206,6 +206,22 @@ export const taskService = {
     const response = await api.delete(`/tasks/${taskId}/permissions/${targetUsername}/all`);
     return response.data;
   },
+
+  // --- Favorites ---
+  getFavorites: async () => {
+    const response = await api.get('/favorites');
+    return response.data;
+  },
+
+  addFavorite: async (taskId) => {
+    const response = await api.post(`/favorites/${taskId}`);
+    return response.data;
+  },
+
+  removeFavorite: async (taskId) => {
+    const response = await api.delete(`/favorites/${taskId}`);
+    return response.data;
+  },
 };
 
 function parseDateParts(rawDate) {

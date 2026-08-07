@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useFavorites } from './FavoritesContext';
 
 // --- 10 Gradient Palettes ---
 const PALETTES = [
@@ -60,6 +61,8 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
   const palette = PALETTES[hash % PALETTES.length];
   const iconPath = ICON_PATHS[hash % ICON_PATHS.length];
   const label = useMemo(() => getRelativeLabel(event.startDateRaw), [event.startDateRaw]);
+  const { favoriteIds, toggleFavorite } = useFavorites();
+  const isFavorite = favoriteIds?.has(event.id) ?? false;
 
   // Deterministic floating shape positions
   const shapes = useMemo(() => [
@@ -125,6 +128,20 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
             {label.text}
           </div>
         )}
+
+        {/* Favorite Button - top right */}
+        <button
+          type="button"
+          className="absolute top-4 right-4 z-20 bg-white/20 backdrop-blur-md hover:bg-white/40 p-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md group/fav active:scale-95"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(event);
+          }}
+        >
+          <svg className={`w-5 h-5 drop-shadow-sm group-hover/fav:scale-110 transition-transform duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-white'}`} fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
 
 
       </div>

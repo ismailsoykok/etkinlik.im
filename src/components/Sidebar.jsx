@@ -38,6 +38,15 @@ const navItems = [
     ),
   },
   {
+    id: 'favorites',
+    label: 'Favoriler',
+    icon: (
+      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    ),
+  },
+  {
     id: 'share-events',
     label: 'Etkinlik Paylaş',
     icon: (
@@ -127,7 +136,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
           {/* Navigation */}
           <nav className="flex-1 px-3.5 py-5 space-y-2.5 overflow-y-auto overflow-x-hidden">
             {navItems.map(item => {
-              if ((item.id === 'my-events' || item.id === 'profile' || item.id === 'shared-events' || item.id === 'share-events') && !user) return null;
+              if ((item.id === 'my-events' || item.id === 'profile' || item.id === 'shared-events' || item.id === 'share-events' || item.id === 'favorites') && !user) return null;
               const isActive = item.id === currentView || (item.id === 'home' && (currentView === 'home' || currentView === 'detail'));
               return (
                 <button
