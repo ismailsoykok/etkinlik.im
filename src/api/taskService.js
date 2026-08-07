@@ -209,17 +209,17 @@ export const taskService = {
 
   // --- Favorites ---
   getFavorites: async () => {
-    const response = await api.get('/api/favorites');
+    const response = await api.get('/favorites');
     return response.data;
   },
 
   addFavorite: async (taskId) => {
-    const response = await api.post(`/api/favorites/${taskId}`);
+    const response = await api.post(`/favorites/${taskId}`);
     return response.data;
   },
 
   removeFavorite: async (taskId) => {
-    const response = await api.delete(`/api/favorites/${taskId}`);
+    const response = await api.delete(`/favorites/${taskId}`);
     return response.data;
   },
 };
