@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useFavorites } from './FavoritesContext';
 
 // --- 10 Gradient Palettes ---
@@ -63,6 +63,15 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
   const label = useMemo(() => getRelativeLabel(event.startDateRaw), [event.startDateRaw]);
   const { favoriteIds, toggleFavorite } = useFavorites();
   const isFavorite = favoriteIds?.has(event.id) ?? false;
+  
+  const [localFavCount, setLocalFavCount] = useState(event.favoriteCount || 0);
+  useEffect(() => { setLocalFavCount(event.favoriteCount || 0); }, [event.favoriteCount]);
+
+  const handleFavClick = (e) => {
+    e.stopPropagation();
+    toggleFavorite(event);
+    setLocalFavCount(prev => isFavorite ? Math.max(0, prev - 1) : prev + 1);
+  };
 
   // Deterministic floating shape positions
   const shapes = useMemo(() => [
@@ -130,18 +139,22 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
         )}
 
         {/* Favorite Button - top right */}
-        <button
-          type="button"
-          className="absolute top-4 right-4 z-20 bg-white/20 backdrop-blur-md hover:bg-white/40 p-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md group/fav active:scale-95"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite(event);
-          }}
-        >
-          <svg className={`w-5 h-5 drop-shadow-sm group-hover/fav:scale-110 transition-transform duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-white'}`} fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </button>
+        <div className="absolute top-4 right-4 z-20 flex flex-col items-center gap-1.5">
+          <button
+            type="button"
+            className="bg-white/20 backdrop-blur-md hover:bg-white/40 p-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md group/fav active:scale-95"
+            onClick={handleFavClick}
+          >
+            <svg className={`w-5 h-5 drop-shadow-sm group-hover/fav:scale-110 transition-transform duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-white'}`} fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+          {localFavCount > 0 && (
+            <span className="text-white text-[10px] font-black tracking-wider bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-lg shadow-sm border border-white/10">
+              {localFavCount}
+            </span>
+          )}
+        </div>
 
 
       </div>

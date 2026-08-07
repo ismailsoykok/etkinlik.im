@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import EventMap from './EventMap';
+import { useFavorites } from './FavoritesContext';
 
 function formatFileSize(size) {
   if (!size || Number.isNaN(Number(size))) return null;
@@ -127,6 +129,17 @@ const EventDetail = ({ event, loading, error, onBack }) => {
   const locationText = [event.address, event.city, event.country].filter(Boolean).join(', ');
   const heroImage = event.files.find((file) => file.url && isImageFile(file));
 
+  const { favoriteIds, toggleFavorite } = useFavorites();
+  const isFavorite = favoriteIds?.has(event?.id) ?? false;
+  
+  const [localFavCount, setLocalFavCount] = useState(event?.favoriteCount || 0);
+  useEffect(() => { setLocalFavCount(event?.favoriteCount || 0); }, [event?.favoriteCount]);
+
+  const handleFavClick = () => {
+    toggleFavorite(event);
+    setLocalFavCount(prev => isFavorite ? Math.max(0, prev - 1) : prev + 1);
+  };
+
   return (
     <div className="space-y-8 pb-12 max-w-[1500px] mx-auto">
       <style>{`
@@ -162,23 +175,46 @@ const EventDetail = ({ event, loading, error, onBack }) => {
           Etkinliklere Dön
         </button>
 
-        <button
-          onClick={() => {
-            if (navigator.share) {
-              navigator.share({
-                title: event.title,
-                text: 'Bu etkinliğe göz at: ' + event.title,
-                url: window.location.href,
-              }).catch(console.error);
-            }
-          }}
-          className="group inline-flex items-center gap-2.5 px-5 py-3 bg-white border border-gray-200 text-primary font-black rounded-full hover:bg-primary/5 hover:border-primary/30 hover:scale-105 active:scale-95 transition-all duration-300 text-sm shadow-sm hover:shadow-md"
-        >
-          <svg className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-          </svg>
-          Paylaş
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleFavClick}
+            className={`group inline-flex items-center gap-2.5 px-5 py-3 border font-black rounded-full transition-all duration-300 text-sm shadow-sm hover:shadow-md hover:scale-105 active:scale-95 ${
+              isFavorite 
+                ? 'bg-red-50 text-red-500 border-red-200 hover:bg-red-100'
+                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:text-red-500'
+            }`}
+          >
+            <svg className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110 ${isFavorite ? 'fill-current' : 'fill-none'}`} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span className="hidden sm:inline">
+              {isFavorite ? 'Favorilerden Çıkar' : 'Favorilere Ekle'}
+            </span>
+            {localFavCount > 0 && (
+              <span className={`px-2 py-0.5 rounded-md text-xs ${isFavorite ? 'bg-red-200/50' : 'bg-gray-100 group-hover:bg-red-50'}`}>
+                {localFavCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: event.title,
+                  text: 'Bu etkinliğe göz at: ' + event.title,
+                  url: window.location.href,
+                }).catch(console.error);
+              }
+            }}
+            className="group inline-flex items-center gap-2.5 px-5 py-3 bg-white border border-gray-200 text-primary font-black rounded-full hover:bg-primary/5 hover:border-primary/30 hover:scale-105 active:scale-95 transition-all duration-300 text-sm shadow-sm hover:shadow-md"
+          >
+            <svg className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+            </svg>
+            <span className="hidden sm:inline">Paylaş</span>
+          </button>
+        </div>
       </div>
 
       {/* 1. SEPARATED PHOTO BANNER AT THE TOP */}

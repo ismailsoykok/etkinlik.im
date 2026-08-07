@@ -209,17 +209,17 @@ export const taskService = {
 
   // --- Favorites ---
   getFavorites: async () => {
-    const response = await api.get('/favorites');
+    const response = await api.get('/api/favorites');
     return response.data;
   },
 
   addFavorite: async (taskId) => {
-    const response = await api.post(`/favorites/${taskId}`);
+    const response = await api.post(`/api/favorites/${taskId}`);
     return response.data;
   },
 
   removeFavorite: async (taskId) => {
-    const response = await api.delete(`/favorites/${taskId}`);
+    const response = await api.delete(`/api/favorites/${taskId}`);
     return response.data;
   },
 };
@@ -320,6 +320,7 @@ export function parseTask(task) {
     time: dateParts.time,
     startDateRaw: task.startDate ?? null,
     fileCount: getFileCount(task),
+    favoriteCount: task.favoriteCount ?? 0,
     completed: task.completed ?? false,
     visibility: task.visibility ?? 'PUBLIC',
   };
@@ -347,6 +348,7 @@ export function parseElasticTask(task) {
     time: dateParts.time,
     startDateRaw: task.startDate ?? null,
     fileCount: Array.isArray(task.files) ? task.files.length : 0,
+    favoriteCount: task.favoriteCount ?? 0,
     completed: task.completed ?? false,
     visibility: task.visibility ?? 'PUBLIC',
     username: task.username ?? null,
@@ -377,6 +379,7 @@ export function parseTaskDetail(task) {
     endDateRaw: task.endDate ?? null,
     files,
     fileCount: files.length,
+    favoriteCount: task.favoriteCount ?? 0,
     completed: task.completed ?? false,
     visibility: task.visibility ?? 'PUBLIC',
     username: task.username ?? task.owner?.username ?? task.createdBy ?? null,
