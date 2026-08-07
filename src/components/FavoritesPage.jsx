@@ -1,10 +1,15 @@
-import { useNavigate } from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EventCard from './EventCard';
 import { useFavorites } from './FavoritesContext';
 
 const FavoritesPage = () => {
   const navigate = useNavigate();
-  const { favorites, loadingFavorites } = useFavorites();
+  const { favorites, loadingFavorites, fetchFavorites } = useFavorites();
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
 
   return (
     <div className="w-full flex-grow flex flex-col items-center justify-start lg:h-[calc(100vh-8rem)] pt-2 sm:pt-6">
