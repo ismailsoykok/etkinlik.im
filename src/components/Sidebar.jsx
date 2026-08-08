@@ -110,7 +110,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
 
       {/* Sidebar Wrapper Container */}
       <div 
-        className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300 ease-in-out shrink-0 group ${
+        className={`fixed top-0 left-0 h-[100dvh] z-50 transition-all duration-300 ease-in-out shrink-0 group ${
           mobileOpen 
             ? 'w-[280px] translate-x-0' 
             : '-translate-x-full lg:translate-x-0 w-[280px] lg:w-[96px] lg:hover:w-[280px]'
@@ -158,7 +158,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
           </nav>
 
           {/* User section */}
-          <div className="p-4 border-t border-gray-100 overflow-hidden shrink-0">
+          <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t border-gray-100 overflow-hidden shrink-0">
             {user ? (
               <div className="flex flex-col gap-3">
                 <button

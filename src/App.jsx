@@ -23,6 +23,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { authService } from './api/authService';
 import { taskService, parseTask, parseElasticTask, parseTaskDetail } from './api/taskService';
+import { FavoritesProvider } from './components/FavoritesContext';
 
 function EventDetailRoute() {
   const { id } = useParams();
@@ -415,7 +416,8 @@ function App() {
   );
 
   return (
-    <div className="flex min-h-screen bg-light font-sans">
+    <FavoritesProvider>
+      <div className="flex min-h-screen bg-light font-sans">
 
 
       {/* Sidebar */}
@@ -559,6 +561,7 @@ function App() {
         <ToastContainer position="top-right" autoClose={3000} />
       </main>
     </div>
+    </FavoritesProvider>
   );
 }
 
