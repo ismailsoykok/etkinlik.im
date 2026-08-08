@@ -11,20 +11,20 @@ const navItems = [
     ),
   },
   {
+    id: 'upcoming',
+    label: 'Yaklaşanlar',
+    icon: (
+      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+  {
     id: 'my-events',
     label: 'Etkinliklerim',
     icon: (
       <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-      </svg>
-    ),
-  },
-  {
-    id: 'profile',
-    label: 'Profilim',
-    icon: (
-      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0" />
       </svg>
     ),
   },
@@ -37,6 +37,7 @@ const navItems = [
       </svg>
     ),
   },
+
   {
     id: 'favorites',
     label: 'Favoriler',
@@ -47,21 +48,11 @@ const navItems = [
     ),
   },
   {
-    id: 'share-events',
-    label: 'Etkinlik Paylaş',
+    id: 'profile',
+    label: 'Profilim',
     icon: (
       <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a3 3 0 11-5.4 1.8a3 3 0 015.4-1.8zm0-13.44a3 3 0 11-5.4-1.8 3 3 0 015.4 1.8zM6 12a3 3 0 11-5.4 0 3 3 0 015.4 0z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.4 10.8l7.2-4.2m-7.2 5.4l7.2 4.2" />
-      </svg>
-    ),
-  },
-  {
-    id: 'upcoming',
-    label: 'Yaklaşanlar',
-    icon: (
-      <svg className="w-[30px] h-[30px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0" />
       </svg>
     ),
   },
@@ -136,7 +127,7 @@ const Sidebar = ({ currentView, onNavigate, user, onLogout }) => {
           {/* Navigation */}
           <nav className="flex-1 px-3.5 py-5 space-y-2.5 overflow-y-auto overflow-x-hidden">
             {navItems.map(item => {
-              if ((item.id === 'my-events' || item.id === 'profile' || item.id === 'shared-events' || item.id === 'share-events' || item.id === 'favorites') && !user) return null;
+              if ((item.id === 'my-events' || item.id === 'profile' || item.id === 'shared-events' || item.id === 'favorites') && !user) return null;
               const isActive = item.id === currentView || (item.id === 'home' && (currentView === 'home' || currentView === 'detail'));
               return (
                 <button

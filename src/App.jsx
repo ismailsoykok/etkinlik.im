@@ -104,16 +104,16 @@ function App() {
                 : pathname === '/share-events'
                   ? 'share-events'
                   : pathname === '/profile'
-                    ? 'profile'
-                    : pathname === '/contact' || pathname === '/iletisim'
-                      ? 'contact'
-                      : pathname === '/privacy' || pathname === '/gizlilik-politikasi'
-                        ? 'privacy'
-                        : pathname === '/terms' || pathname === '/kullanim-kosullari'
-                          ? 'terms'
-                          : pathname === '/about' || pathname === '/hakkimizda'
-                            ? 'about'
-                            : 'home';
+                  ? 'profile'
+                  : pathname === '/contact' || pathname === '/iletisim'
+                    ? 'contact'
+                    : pathname === '/privacy' || pathname === '/gizlilik-politikasi'
+                      ? 'privacy'
+                      : pathname === '/terms' || pathname === '/kullanim-kosullari'
+                        ? 'terms'
+                        : pathname === '/about' || pathname === '/hakkimizda'
+                          ? 'about'
+                          : 'home';
 
   // --- Event state ---
   const [events, setEvents] = useState([]);

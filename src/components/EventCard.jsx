@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useFavorites } from './FavoritesContext';
+import { toast } from 'react-toastify';
 
 // --- 10 Gradient Palettes ---
 const PALETTES = [
@@ -82,7 +83,11 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
 
   return (
     <div
-      className={`group flex ${isVertical ? 'flex-col' : 'flex-col md:flex-row'} bg-white/80 backdrop-blur-md p-6 border border-white/60 rounded-3xl elevation-2 hover:elevation-4 elevation-hover active:scale-[0.985] transition-all duration-300 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 gap-6 w-full items-stretch`}
+      className={`group flex flex-col bg-white/90 backdrop-blur-md p-6 rounded-3xl elevation-2 hover:elevation-4 elevation-hover active:scale-[0.985] transition-all duration-300 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 w-full relative`}
+      style={{
+        border: '2px solid transparent',
+        background: 'linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)) padding-box, linear-gradient(to right, #3b82f6, #10b981) border-box'
+      }}
       role="button"
       tabIndex={0}
       onClick={() => onSelect?.(event.id)}
@@ -93,82 +98,42 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
         }
       }}
     >
-      {/* --- Visual Header (Left / Top) --- */}
-      <div
-        className={`w-full ${isVertical ? '' : 'md:w-56'} h-56 md:h-auto shrink-0 relative overflow-hidden rounded-2xl ${isVertical ? 'h-48 md:h-48' : ''}`}
-        style={{ background: `linear-gradient(135deg, ${palette.from}, ${palette.via}, ${palette.to})` }}
-      >
-        {/* Floating Shapes */}
-        {shapes.map((s, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full opacity-20 ec-float"
-            style={{
-              top: s.top, left: s.left, right: s.right, bottom: s.bottom,
-              width: s.size, height: s.size,
-              background: palette.accent,
-              animationDelay: `${i * 1.2}s`,
-              animationDuration: `${3 + i}s`,
-            }}
-          />
-        ))}
-
-        {/* Large Decorative Icon */}
-        <svg
-          viewBox="0 0 24 24"
-          fill={palette.accent}
-          className="absolute -right-4 -bottom-4 w-28 h-28 opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700"
-        >
-          <path d={iconPath} />
-        </svg>
-
-        {/* Dot Pattern Overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `radial-gradient(circle, ${palette.accent} 1px, transparent 1px)`,
-            backgroundSize: '14px 14px',
-          }}
-        />
-
-        {/* Relative Label Badge - top left */}
-        {label && (
-          <div className={`absolute top-4 left-4 z-20 ${label.bg} text-white text-[11px] font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-lg shadow-lg`}>
-            {label.text}
-          </div>
-        )}
-
-        {/* Favorite Button - top right */}
+        {/* Favorite Button - top right absolute */}
         <div className="absolute top-4 right-4 z-20 flex flex-col items-center gap-1.5">
           <button
             type="button"
-            className="bg-white/20 backdrop-blur-md hover:bg-white/40 p-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md group/fav active:scale-95"
+            className="bg-gray-100/80 hover:bg-gray-200 p-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-md group/fav active:scale-95 border border-gray-200"
             onClick={handleFavClick}
           >
-            <svg className={`w-5 h-5 drop-shadow-sm group-hover/fav:scale-110 transition-transform duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-white'}`} fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className={`w-5 h-5 drop-shadow-sm group-hover/fav:scale-110 transition-transform duration-300 ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}`} fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </button>
           {localFavCount > 0 && (
-            <span className="text-white text-[10px] font-black tracking-wider bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-lg shadow-sm border border-white/10">
+            <span className="text-gray-600 text-[10px] font-black tracking-wider bg-gray-100 px-2 py-0.5 rounded-lg shadow-sm border border-gray-200">
               {localFavCount}
             </span>
           )}
         </div>
 
-
-      </div>
-
-      {/* --- Content (Right / Bottom) --- */}
-      <div className="flex-grow flex flex-col justify-between min-w-0 md:py-1">
+      <div className="flex-grow flex flex-col justify-between min-w-0 pr-12">
         <div>
+          {/* Relative Label Badge */}
+          {label && (
+            <div className="mb-3">
+              <span className={`inline-block ${label.bg} text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm`}>
+                {label.text}
+              </span>
+            </div>
+          )}
+
           {/* Title */}
-          <h3 className="mb-3 text-2xl font-black tracking-tight text-gray-900 line-clamp-1 group-hover:text-primary group-hover:translate-x-1.5 transition-all duration-300 ease-out">
+          <h3 className="mb-2 text-xl font-black tracking-tight text-gray-900 line-clamp-2 group-hover:text-primary transition-colors duration-300">
             {event.title}
           </h3>
           
           {/* Description */}
-          <p className="mb-5 text-sm text-gray-500 line-clamp-2 leading-relaxed">
+          <p className="mb-4 text-sm text-gray-500 line-clamp-2 leading-relaxed">
             {event.desc || <span className="italic text-gray-300">Açıklama belirtilmemiş</span>}
           </p>
 
@@ -196,14 +161,37 @@ const EventCard = ({ event, onSelect, layout = 'horizontal' }) => {
             <svg className="w-4 h-4 text-primary shrink-0 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
             </svg>
-            <span className="text-xs text-gray-400 truncate">{event.address}, {event.city}</span>
+            <span className="text-xs text-gray-500 truncate font-medium">{event.address}, {event.city}</span>
           </div>
 
           {/* Action Button */}
-          <div className="shrink-0">
+          <div className="shrink-0 flex items-center gap-2">
             <button
               type="button"
-              className="inline-flex items-center w-auto bg-gray-100/80 text-gray-700 font-bold border border-gray-200 group-hover:bg-primary group-hover:text-white group-hover:border-primary group-hover:shadow-md group-hover:shadow-primary/20 active:scale-95 transition-all duration-300 text-xs px-4 py-2.5 rounded-xl focus:outline-none"
+              className="inline-flex items-center w-auto bg-gray-50 text-gray-500 font-bold border border-gray-200 hover:bg-gray-100 active:scale-95 transition-all duration-300 text-xs px-3 py-2.5 rounded-xl focus:outline-none"
+              onClick={(e) => {
+                e.stopPropagation();
+                const url = window.location.origin + '/events/' + event.id;
+                if (navigator.share) {
+                  navigator.share({
+                    title: event.title,
+                    text: 'Bu etkinliğe göz at: ' + event.title,
+                    url: url,
+                  }).catch(console.error);
+                } else {
+                   navigator.clipboard.writeText(url);
+                   toast.success('Bağlantı kopyalandı!');
+                }
+              }}
+            >
+              <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+              </svg>
+              Paylaş
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center w-auto bg-gray-100 text-gray-700 font-bold border border-gray-200 group-hover:bg-primary group-hover:text-white group-hover:border-primary group-hover:shadow-md group-hover:shadow-primary/20 active:scale-95 transition-all duration-300 text-xs px-4 py-2.5 rounded-xl focus:outline-none"
             >
               Detaylar
               <svg className="w-4 h-4 ms-1 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

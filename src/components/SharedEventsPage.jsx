@@ -233,6 +233,28 @@ const SharedEventsPage = () => {
                       <p className="text-xs text-gray-500 font-medium">Dosya</p>
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const url = window.location.origin + '/events/' + event.id;
+                          if (navigator.share) {
+                            navigator.share({
+                              title: event.title,
+                              text: 'Bu etkinliğe göz at: ' + event.title,
+                              url: url,
+                            }).catch(console.error);
+                          } else {
+                             navigator.clipboard.writeText(url);
+                             toast.success('Bağlantı kopyalandı!');
+                          }
+                        }}
+                        className="px-5 py-2.5 bg-gray-100 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-200 hover:scale-105 active:scale-95 hover:shadow-sm transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                        </svg>
+                        Paylaş
+                      </button>
                       <button 
                         onClick={() => navigate(`/events/${event.id}`)}
                         className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 hover:scale-105 active:scale-95 hover:shadow-md hover:shadow-primary/20 transition-all duration-300 shadow-sm"
