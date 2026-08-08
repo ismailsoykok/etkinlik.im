@@ -292,12 +292,23 @@ const MyEventsPage = () => {
 
   return (
     <section className="w-full max-w-6xl mx-auto pb-10">
-      <div className="mb-6">
-        <p className="text-xs font-black uppercase tracking-[0.22em] text-primary">Kullanıcı Paneli</p>
-        <h1 className="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
-          Etkinliklerim
-        </h1>
-        <p className="mt-2 text-gray-500 font-medium">Oluşturduğunuz etkinlikleri yönetin ve paylaşın</p>
+      <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-primary">Kullanıcı Paneli</p>
+          <h1 className="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+            Etkinliklerim
+          </h1>
+          <p className="mt-2 text-gray-500 font-medium">Oluşturduğunuz etkinlikleri yönetin ve paylaşın</p>
+        </div>
+        <button 
+          onClick={() => navigate('/events/new')}
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-primary/20"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Yeni Etkinlik
+        </button>
       </div>
 
       {error && (
