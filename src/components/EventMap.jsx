@@ -15,8 +15,8 @@ L.Icon.Default.mergeOptions({
 // Dinamik ikon oluşturucu (Aynı konumdaki etkinlikleri tek noktada göstermek için)
 const getCustomIcon = (total) => {
   // Birden fazlaysa sağ üste sayı badge'i koyalım
-  const badgeHtml = total > 1 
-    ? `<div class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black min-w-[18px] px-1 h-[18px] flex items-center justify-center rounded-full z-10 border border-white shadow-sm">${total}</div>` 
+  const badgeHtml = total > 1
+    ? `<div class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black min-w-[18px] px-1 h-[18px] flex items-center justify-center rounded-full z-10 border border-white shadow-sm">${total}</div>`
     : '';
 
   return new L.DivIcon({
@@ -139,8 +139,8 @@ const EventMap = ({ events = [], onEventSelect, userLocation, onMapMove }) => {
         }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">Carto</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         {/* Konum merkezleme ve kullanıcı konumu işareti */}
@@ -167,15 +167,15 @@ const EventMap = ({ events = [], onEventSelect, userLocation, onMapMove }) => {
         {groupedMarkers.map(event => (
           <Marker key={event.id} position={[event.lat, event.lng]} icon={getCustomIcon(event.totalInGroup)}>
             <Popup className="premium-popup">
-              <div className="w-64 rounded-2xl bg-white shadow-2xl flex flex-col" style={{maxHeight: '320px'}}>
+              <div className="w-64 rounded-2xl bg-white shadow-2xl flex flex-col" style={{ maxHeight: '320px' }}>
                 {/* Header Gradient */}
                 <div className="h-12 w-full bg-gradient-to-r from-primary to-secondary shrink-0 relative flex items-center justify-center">
-                   <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
-                   <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-primary uppercase tracking-widest shadow-lg">
-                      {event.totalInGroup > 1 ? `${event.totalInGroup} ETKİNLİK` : event.date}
-                   </div>
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
+                  <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-primary uppercase tracking-widest shadow-lg">
+                    {event.totalInGroup > 1 ? `${event.totalInGroup} ETKİNLİK` : event.date}
+                  </div>
                 </div>
-                
+
                 {/* Content - Scrollable if multiple */}
                 <div className="overflow-y-auto ec-scrollbar p-0 flex-1 min-h-0">
                   {event.allEventsInGroup.map((ev, i) => (
@@ -183,7 +183,7 @@ const EventMap = ({ events = [], onEventSelect, userLocation, onMapMove }) => {
                       <h3 className="font-extrabold text-gray-900 text-sm leading-tight line-clamp-2">
                         {ev.title}
                       </h3>
-                      
+
                       <div className="flex flex-col gap-1.5">
                         <div className="flex items-center gap-1.5 text-[11px] text-gray-500 font-medium">
                           <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -211,8 +211,8 @@ const EventMap = ({ events = [], onEventSelect, userLocation, onMapMove }) => {
                                 url: url,
                               }).catch(console.error);
                             } else {
-                               navigator.clipboard.writeText(url);
-                               toast.success('Bağlantı kopyalandı!');
+                              navigator.clipboard.writeText(url);
+                              toast.success('Bağlantı kopyalandı!');
                             }
                           }}
                           className="flex-shrink-0 flex items-center justify-center w-8 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl transition-all shadow-sm"
@@ -249,7 +249,8 @@ const EventMap = ({ events = [], onEventSelect, userLocation, onMapMove }) => {
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         /* Marker Animations */
         .marker-container {
           position: relative;
